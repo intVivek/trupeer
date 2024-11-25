@@ -8,6 +8,7 @@ export default function Editor() {
   const [videoURL, setVideoURL] = useState("");
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
+  const [zoomBlocks, setZoomBlocks] = useState([])
   const videoRef = useRef(null);
   const timelineRef = useRef(null);
 
@@ -34,6 +35,8 @@ export default function Editor() {
             timelineRef={timelineRef}
             videoRef={videoRef}
             setCurrentTime={setCurrentTime}
+            zoomBlocks={zoomBlocks}
+            setZoomBlocks={setZoomBlocks}
           />
         </div>
       ) : (
