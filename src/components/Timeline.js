@@ -15,7 +15,7 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
     setCurrentTime,
   } = useVideoContext();
 
-  const [isResizing, setIsResizing] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
   const timelineRef = useRef(null);
 
   const handlePlayheadDrag = (event) => {
@@ -33,17 +33,19 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
   };
 
   const startDragging = () => {
+    setIsInteracting(true);
     window.addEventListener("mousemove", handlePlayheadDrag);
     window.addEventListener("mouseup", stopDragging);
   };
 
   const stopDragging = () => {
+    setTimeout(() => setIsInteracting(false), 10);
     window.removeEventListener("mousemove", handlePlayheadDrag);
     window.removeEventListener("mouseup", stopDragging);
   };
 
   const handleAddZoom = (event) => {
-    if (isResizing) return;
+    if (isInteracting) return;
 
     const blockSize = duration / 10;
 
@@ -115,7 +117,9 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
                 left: `${(i / 10) * 95 + 1}%`,
               }}
             >
-              <span className="text-[8px] ml-[6px] text-white">{formatTime(duration*i/11)}</span>
+              <span className="text-[8px] ml-[6px] text-white">
+                {formatTime((duration * i) / 11)}
+              </span>
             </div>
           ))}
         <div
@@ -148,9 +152,10 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
                 blockWidth={blockWidth}
                 setOpenBlockEditor={setOpenBlockEditor}
                 blockLeft={blockLeft}
+                timelineRef={timelineRef}
                 i={i}
                 block={block}
-                setIsResizing={setIsResizing}
+                setIsInteracting={setIsInteracting}
               />
             );
           })}

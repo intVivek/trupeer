@@ -6,7 +6,8 @@ export default function ZoomBlockHandle({
   blockWidth,
   setOpenBlockEditor,
   block,
-  setIsResizing,
+  setIsInteracting,
+  timelineRef,
   i,
 }) {
   const { zoomBlocks, setZoomBlocks, duration, dispatch } = useVideoContext();
@@ -14,7 +15,7 @@ export default function ZoomBlockHandle({
   const handleResizeLeft = (event, block, i) => {
     event.preventDefault();
     event.stopPropagation();
-    setIsResizing(true);
+    setIsInteracting(true);
 
     const initialMouseX = event.clientX;
     const initialStartTime = block.startTime;
@@ -42,7 +43,7 @@ export default function ZoomBlockHandle({
     };
 
     const onMouseUp = () => {
-      setTimeout(() => setIsResizing(false), 10);
+      setTimeout(() => setIsInteracting(false), 10);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
@@ -54,15 +55,14 @@ export default function ZoomBlockHandle({
   const handleResizeRight = (event, block, i) => {
     event.preventDefault();
     event.stopPropagation();
-    setIsResizing(true);
+    setIsInteracting(true);
 
     const initialMouseX = event.clientX;
     const initialStartTime = block.startTime;
     const initialEndTime = block.endTime;
 
     const onMouseMove = (e) => {
-      e.stopPropagation();
-
+      e.preventDefault();
       const deltaX = e.clientX - initialMouseX;
 
       let newEndTime = initialEndTime + (deltaX * duration) / 600;
@@ -82,7 +82,67 @@ export default function ZoomBlockHandle({
     };
 
     const onMouseUp = () => {
-      setTimeout(() => setIsResizing(false), 10);
+      setTimeout(() => setIsInteracting(false), 10);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  };
+
+  const handleZoomBlockDrag = (event, block, i) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setTimeout(() => setIsInteracting(true), 20);
+    const timeline = timelineRef?.current.getBoundingClientRect();
+
+    if (!timeline) return;
+
+    const initialMouseX = event.clientX;
+    const initialStartTime = block.startTime;
+    const blockDuration = block.endTime - block.startTime;
+
+    var isDragging=false;
+
+    const onMouseMove = (e) => {
+      const deltaX = e.clientX - initialMouseX;
+
+      if (Math.abs(deltaX) > 5) {
+        isDragging = true;
+        setIsInteracting(true);
+        let newStartTime = Math.min(
+          Math.max(
+            initialStartTime + (deltaX / timeline.width) * duration,
+            zoomBlocks[i - 1]?.endTime || 0
+          ),
+          zoomBlocks[i + 1]?.startTime - blockDuration ||
+            duration - blockDuration
+        );
+        let newEndTime = newStartTime + blockDuration;
+
+        dispatch(
+          setZoomBlocks(
+            zoomBlocks.map((b, index) =>
+              index === i
+                ? { ...b, startTime: newStartTime, endTime: newEndTime }
+                : b
+            )
+          )
+        );
+      }
+    };
+
+    const onMouseUp = (e) => {
+      e.stopPropagation();
+      setTimeout(() => {
+        setIsInteracting(false);
+      }, 10);
+
+      if (!isDragging) {
+        setOpenBlockEditor(block.id);
+      }
+
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
@@ -110,10 +170,7 @@ export default function ZoomBlockHandle({
       </div>
       <div
         className="flex-1 h-full "
-        onClick={(e) => {
-          e.stopPropagation();
-          setOpenBlockEditor(block.id);
-        }}
+        onMouseDown={(e) => handleZoomBlockDrag(e, block, i)}
       ></div>
       <div
         className="w-3 h-full flex-shrink-0 grid place-items-center bg-accentColor200 cursor-ew-resize"
