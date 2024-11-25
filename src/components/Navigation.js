@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 
-export default function Navigation({ videoRef, setCurrentTime }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+export default function Navigation({ videoRef, setCurrentTime, openPreview, setOpenPreview, isPlaying, setIsPlaying }) {
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -32,7 +31,7 @@ export default function Navigation({ videoRef, setCurrentTime }) {
   };
 
   return (
-    <div className="w-full my-4 flex justify-center gap-2 items-center">
+    <div className=" relative w-full my-4 flex justify-center gap-2 items-center">
       <div
         className="rounded-full cursor-pointer w-8 h-8 flex justify-center items-center bg-gray-950 text-white"
         onClick={handleBackward}
@@ -50,6 +49,12 @@ export default function Navigation({ videoRef, setCurrentTime }) {
         onClick={handleForward}
       >
         <FaForward size={12}/>
+      </div>
+      <div
+        className="absolute right-0 rounded-md select-none cursor-pointer text-sm font-medium p-2 flex justify-center items-center bg-gray-950 text-white"
+        onClick={()=>setOpenPreview(p=>!p)}
+      >
+        {openPreview?"Edit":'Preview'}
       </div>
     </div>
   );

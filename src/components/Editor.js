@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FileUpload from "./FileUpload";
 import VideoPlayer from "./videoPlayer";
 import Timeline from "./Timeline";
@@ -11,6 +11,7 @@ export default function Editor() {
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [openBlockEditor, setOpenBlockEditor] = useState(-1);
+  const [openPreview, setOpenPreview] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef(null);
   const timelineRef = useRef(null);
@@ -23,16 +24,18 @@ export default function Editor() {
     setVideoURL(URL.createObjectURL(file));
   };
 
-  const togglePlayPause = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsPlaying(!isPlaying); // Toggle the play state
+  useEffect(()=>{
+    if(openBlockEditor!==-1){
+      setIsPlaying(false);
+      videoRef.current.pause();
     }
-  };
+  }, [openBlockEditor])
+
+  const handleCloseSidebar = () => {
+    setOpenBlockEditor(-1)
+    setIsPlaying(true);
+    videoRef.current.play();
+  }
 
   return (
     <div className="relative w-full flex items-center justify-between h-full">
@@ -44,8 +47,16 @@ export default function Editor() {
               setDuration={setDuration}
               setCurrentTime={setCurrentTime}
               currentTime={currentTime}
+              isPreview={openPreview}
             />
-            <Navigation  videoRef={videoRef} setCurrentTime={setCurrentTime}/>
+            <Navigation
+              videoRef={videoRef}
+              setCurrentTime={setCurrentTime}
+              openPreview={openPreview}
+              setOpenPreview={setOpenPreview}
+              setIsPlaying={setIsPlaying}
+              isPlaying={isPlaying}
+            />
             <Timeline
               currentTime={currentTime}
               duration={duration}
@@ -53,6 +64,7 @@ export default function Editor() {
               videoRef={videoRef}
               setCurrentTime={setCurrentTime}
               setOpenBlockEditor={setOpenBlockEditor}
+              isPreview={openPreview}
             />
           </div>
         ) : (
@@ -62,7 +74,7 @@ export default function Editor() {
       {openBlockEditor !== -1 && (
         <BlockEditor
           index={openBlockEditor}
-          onClose={() => setOpenBlockEditor(-1)}
+          onClose={handleCloseSidebar}
           duration={duration}
           width={videoRef.current.videoWidth}
           height={videoRef.current.videoHeight}

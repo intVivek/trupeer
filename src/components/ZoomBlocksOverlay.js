@@ -12,7 +12,7 @@ export default function ZoomBlocksOverlay({ currentTime }) {
           isActive && (
             <div
               key={block.id}
-              className="absolute border-2 border-accentColor rounded-md pointer-events-none"
+              className="absolute z-10 border-2 border-accentColor rounded-md pointer-events-none"
               style={{
                 top: `${block.y}px`,
                 left: `${block.x}px`,
