@@ -29,7 +29,7 @@ export default function VideoPlayer({
       <ZoomBlocksOverlay currentTime={currentTime}/>
       <video
         ref={videoRef}
-        controls
+        controls={false}
         width="600"
         className="border border-gray-600 rounded-md"
         onLoadedMetadata={handleLoadedMetadata}

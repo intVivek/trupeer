@@ -13,14 +13,14 @@ export default function Timeline({
   const { setZoomBlocks, zoomBlocks } = useVideoContext();
   const [isResizing, setIsResizing] = useState(false);
   const handlePlayheadDrag = (event) => {
-    const timeline = timelineRef.current.getBoundingClientRect();
+    const timeline = timelineRef?.current.getBoundingClientRect();
     const dragX = Math.min(
       Math.max(event.clientX - timeline.left, 0),
       timeline.width
     );
     const newTime = (dragX / timeline.width) * duration;
 
-    if (videoRef.current) {
+    if (videoRef?.current) {
       videoRef.current.currentTime = newTime;
     }
     setCurrentTime(newTime);
