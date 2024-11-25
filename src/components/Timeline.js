@@ -2,9 +2,9 @@ import { useVideoContext } from "@/hooks/useVideoContext";
 import { useRef, useState } from "react";
 import ZoomBlockHandle from "./ZoomBlockHandle";
 import { twMerge } from "tailwind-merge";
+import formatTime from "@/util/formatTime";
 
 export default function Timeline({ setOpenBlockEditor, isPreview }) {
-
   const {
     setZoomBlocks,
     zoomBlocks,
@@ -46,19 +46,19 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
     if (isResizing) return;
 
     const blockSize = duration / 10;
-  
+
     event.stopPropagation();
     const timeline = timelineRef.current.getBoundingClientRect();
     const clickX = event.clientX - timeline.left;
     const startTime = (clickX / timeline.width) * duration;
-  
+
     if (isPreview) {
       if (videoRef?.current) {
         videoRef.current.currentTime = startTime;
       }
       return dispatch(setCurrentTime(startTime));
     }
-  
+
     const newZoomBlock = {
       id: Math.floor(Math.random() * 100000),
       startTime: Math.round(startTime),
@@ -67,32 +67,34 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
       y: 0,
       scaleFactor: 2,
     };
-  
+
     const overlappingBlock = zoomBlocks.find(
       (block) =>
         (startTime >= block.startTime && startTime < block.endTime) ||
-        (startTime + blockSize > block.startTime && startTime + blockSize <= block.endTime)
+        (startTime + blockSize > block.startTime &&
+          startTime + blockSize <= block.endTime)
     );
-  
+
     if (overlappingBlock) {
       console.log("Already exists or overlaps with an existing block.");
       return;
     }
-  
-    const insertIndex = zoomBlocks.findIndex((block) => block.startTime > newZoomBlock.startTime);
-  
+
+    const insertIndex = zoomBlocks.findIndex(
+      (block) => block.startTime > newZoomBlock.startTime
+    );
+
     const updatedZoomBlocks =
       insertIndex === -1
-        ? [...zoomBlocks, newZoomBlock] 
+        ? [...zoomBlocks, newZoomBlock]
         : [
             ...zoomBlocks.slice(0, insertIndex),
             newZoomBlock,
             ...zoomBlocks.slice(insertIndex),
           ];
-  
+
     dispatch(setZoomBlocks(updatedZoomBlocks));
   };
-  
 
   return (
     <div className={twMerge("w-full mt-4 h-16 relative")}>
@@ -107,12 +109,14 @@ export default function Timeline({ setOpenBlockEditor, isPreview }) {
         {!isPreview &&
           [...Array(11)].map((_, i) => (
             <div
-              className="absolute bottom-0 h-[10px] w-[1px] bg-gray-600"
+              className="absolute flex select-none bottom-0 h-[12px] w-[1px] bg-gray-600"
               key={i}
               style={{
                 left: `${(i / 10) * 95 + 1}%`,
               }}
-            />
+            >
+              <span className="text-[8px] ml-[6px] text-white">{formatTime(duration*i/11)}</span>
+            </div>
           ))}
         <div
           className="absolute z-10 top-0 w-[1px] h-full  rounded-sm cursor-grab transform -translate-x-1/2 bg-accentColor"

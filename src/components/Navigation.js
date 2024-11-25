@@ -1,17 +1,11 @@
 import { useVideoContext } from "@/hooks/useVideoContext";
+import formatTime from "@/util/formatTime";
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 
-export default function Navigation({
-  openPreview,
-  setOpenPreview,
-}) {
-  const {
-    videoRef,
-    setCurrentTime,
-    isPlaying,
-    setIsPlaying,
-    dispatch,
-  } = useVideoContext();
+
+export default function Navigation({ openPreview, setOpenPreview }) {
+  const { videoRef, setCurrentTime, isPlaying, setIsPlaying, currentTime, duration, dispatch } =
+    useVideoContext();
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -44,7 +38,11 @@ export default function Navigation({
   };
 
   return (
-    <div className=" relative w-full my-4 flex justify-center gap-2 items-center">
+    <div className="relative w-full my-4 flex justify-center gap-2 items-center">
+      <div className="absolute left-0 select-none text-white text-xs">
+        <span>{formatTime(currentTime)}</span> /{" "}
+        <span>{formatTime(duration)}</span>
+      </div>
       <div
         className="rounded-full cursor-pointer w-8 h-8 flex justify-center items-center bg-gray-950 text-white"
         onClick={handleBackward}

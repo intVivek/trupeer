@@ -54,7 +54,7 @@ export default function VideoPlayer({ isPreview }) {
         {!isPreview && <ZoomBlocksOverlay />}
         <video
           ref={videoRef}
-          controls
+          controls={false}
           width="600"
           className=""
           onLoadedMetadata={handleLoadedMetadata}
