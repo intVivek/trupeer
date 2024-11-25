@@ -1,3 +1,4 @@
+"use client";
 import Editor from "@/component/Editor";
 
 export default function Home() {
