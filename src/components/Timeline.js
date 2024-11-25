@@ -67,7 +67,7 @@ export default function Timeline({
   return (
     <div
       ref={timelineRef}
-      className="w-full mt-4 h-16 relative rounded-md border border-gray-600  cursor-pointer"
+      className="w-full mt-4 h-16 relative rounded-md border border-gray200  cursor-pointer"
       onClick={handleAddZoom}
     >
       {[...Array(11)].map((_, i) => (
@@ -80,7 +80,7 @@ export default function Timeline({
         />
       ))}
       <div
-        className="absolute z-10 top-0 w-[1px] h-full  rounded-sm cursor-grab transform -translate-x-1/2 bg-yellow-500"
+        className="absolute z-10 top-0 w-[1px] h-full  rounded-sm cursor-grab transform -translate-x-1/2 bg-accentColor"
         style={{
           left: `${(currentTime / duration) * 100}%`,
         }}
@@ -88,7 +88,7 @@ export default function Timeline({
         onClick={(e) => e.stopPropagation()}
       >
         <div
-          className="absolute top-[-6px] left-1/2 w-[12px] h-[12px] bg-yellow-500 rounded-full cursor-pointer transform -translate-x-1/2"
+          className="absolute top-[-6px] left-1/2 w-[12px] h-[12px] bg-accentColor rounded-full cursor-pointer transform -translate-x-1/2"
           style={{
             cursor: "grab",
           }}

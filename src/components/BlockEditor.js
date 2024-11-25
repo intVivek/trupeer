@@ -72,7 +72,7 @@ export default function BlockEditor({ index, onClose, duration }) {
   return (
     <div className="fixed w-screen h-screen">
       <div className="bg-backdrop w-screen h-screen"></div>
-      <div className="absolute bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray-800 z-30 animate-slide-in">
+      <div className="absolute bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray200 z-30 animate-slide-in">
         <div className="flex justify-between items-center my-8 text-slate-100 text-xl font-medium">
           Edit Zoom Block
           <RxCross1 className="ml-auto cursor-pointer" onClick={onClose} />
@@ -167,8 +167,8 @@ export default function BlockEditor({ index, onClose, duration }) {
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
-          <div className="flex justify-between mt-auto mb-4">
-            <Button onClick={handleDelete} label="Delete" />
+          <div className="flex justify-end gap-4 mt-auto mb-4">
+            <Button secondary onClick={handleDelete} label="Delete" />
             <Button type="submit" label="Save" />
           </div>
         </form>

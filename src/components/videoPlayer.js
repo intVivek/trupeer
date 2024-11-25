@@ -31,7 +31,7 @@ export default function VideoPlayer({
         ref={videoRef}
         controls={false}
         width="600"
-        className="border border-gray-600 rounded-md"
+        className="border border-gray200 rounded-md"
         onLoadedMetadata={handleLoadedMetadata}
         onTimeUpdate={handleTimeUpdate}
       >

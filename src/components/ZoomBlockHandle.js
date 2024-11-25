@@ -12,7 +12,7 @@ export default function ZoomBlockHandle({
 }) {
 
     const { zoomBlocks, setZoomBlocks } = useVideoContext();
-    
+
   const handleResizeLeft = (event, block, i) => {
     event.preventDefault();
     event.stopPropagation();
@@ -100,7 +100,7 @@ export default function ZoomBlockHandle({
 
   return (
     <div
-      className="absolute flex h-full bg-transparentYellow border overflow-hidden border-yellow-500 rounded-md"
+      className="absolute flex h-full bg-transparentAccent border overflow-hidden border-accentColor rounded-md"
       style={{
         left: `${blockLeft}%`,
         width: `${blockWidth}%`,
@@ -109,7 +109,7 @@ export default function ZoomBlockHandle({
       onClick={(e) => e.stopPropagation()}
     >
       <div
-        className="w-3 h-full grid place-items-center bg-yellow-600 cursor-ew-resize"
+        className="w-3 h-full grid place-items-center bg-accentColor200 cursor-ew-resize"
         onMouseDown={(e) => handleResizeLeft(e, block, i)}
         onClick={(e) => e.stopPropagation()}
       >
@@ -123,7 +123,7 @@ export default function ZoomBlockHandle({
         }}
       ></div>
       <div
-        className="w-3 h-full flex-shrink-0 grid place-items-center bg-yellow-600 cursor-ew-resize"
+        className="w-3 h-full flex-shrink-0 grid place-items-center bg-accentColor200 cursor-ew-resize"
         onMouseDown={(e) => handleResizeRight(e, block, i)}
         onClick={(e) => e.stopPropagation()}
       >

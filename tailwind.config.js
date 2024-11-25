@@ -8,9 +8,14 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray900: '#151515',
-        transparentYellow: '#e6b31542',
+        gray900: '#171717',
+        gray800: '#1c1c1c',
+        gray200: "#323232",
+        gray400: '#aeaeae',
         backdrop: '#82828240',
+        accentColor: '#ff6c47',
+        accentColor200: '#b74d33',
+        transparentAccent: '#ff643e3b',
       },
 
       animation: {
