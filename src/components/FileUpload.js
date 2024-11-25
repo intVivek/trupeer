@@ -1,4 +1,4 @@
-export default function FileUpload({ label, onChange }) {
+export default function FileUpload({ label='Select a video', onChange }) {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -7,8 +7,9 @@ export default function FileUpload({ label, onChange }) {
 
   return (
     <div>
-      <h1>{label}</h1>
+      <h1 className="text-white mb-4">{label}</h1>
       <input
+      className="text-white"
         type="file"
         accept="video/*"
         onChange={handleFileChange}
