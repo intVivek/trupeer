@@ -20,16 +20,17 @@ export default function BlockEditor({
   setZoomBlocks,
   onClose,
   duration,
-  width,
-  height,
 }) {
   const editingBlock = zoomBlocks[index];
+
+  const [error, setError] = useState('')
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
+    watch
   } = useForm();
 
   useEffect(() => {
@@ -50,13 +51,20 @@ export default function BlockEditor({
   const onSubmit = (data) => {
     const { startTime, endTime, x, y, scaleFactor } = data;
 
-    // If validation passes, save the updated block
+    if(scaleFactor<600/(600 - x)){
+      return setError(`Zoom box getting out of video, Either reduce X coordinate or make scale factor greate than ${600/(600 - x)}`)
+    }
+
+    if(scaleFactor<320/(320 - y)){
+      return setError(`Zoom box getting out of video, Either reduce Y coordinate or make scale factor greate than ${600/(600 - y)}`)
+    }
+
     const updatedBlock = {
       id: editingBlock.id,
       startTime,
       endTime,
-      x,
-      y,
+      x: x,
+      y: y,
       scaleFactor,
     };
 
@@ -158,8 +166,8 @@ export default function BlockEditor({
                   message: "Minimum value should be zero",
                 },
                 max: {
-                  value: width,
-                  message: `Maximum value should be ${width}`,
+                  value: 600,
+                  message: `Maximum value should be 600`,
                 },
               })}
               type="number"
@@ -186,8 +194,8 @@ export default function BlockEditor({
                   message: "Minimum value should be zero",
                 },
                 max: {
-                  value: height,
-                  message: `Maximum value should be ${height}`,
+                  value: 320,
+                  message: `Maximum value should be 320`,
                 },
               })}
               type="number"
@@ -207,12 +215,9 @@ export default function BlockEditor({
             </label>
             <input
               id="scaleFactor"
+              step={'any'}
               {...register("scaleFactor", {
                 required: "Scale Factor is required",
-                min: {
-                  value: 0,
-                  message: "scaleFactor must be a positive number",
-                },
               })}
               type="number"
               className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none"
@@ -223,6 +228,12 @@ export default function BlockEditor({
               </div>
             )}
           </div>
+
+          {error && (
+              <div className="text-red-500 text-sm">
+                {error}
+              </div>
+            )}
 
           <div className="flex justify-between mt-auto mb-4">
             <Button onClick={handleDelete} label="Delete" />

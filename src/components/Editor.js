@@ -31,6 +31,8 @@ export default function Editor() {
               type={videoFile.type}
               setDuration={setDuration}
               setCurrentTime={setCurrentTime}
+              currentTime={currentTime}
+              zoomBlocks={zoomBlocks}
             />
             <Timeline
               currentTime={currentTime}
