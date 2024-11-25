@@ -2,20 +2,22 @@ import { useVideoContext } from "@/hooks/useVideoContext";
 import { useState } from "react";
 import ZoomBlocksOverlay from "./ZoomBlocksOverlay";
 
-export default function VideoPlayer({
-  setDuration,
-  currentTime,
-  setCurrentTime,
-  videoRef,
-  isPreview,
-}) {
+export default function VideoPlayer({ isPreview }) {
   const [currentZoom, setCurrentZoom] = useState(null);
 
-  const { videoURL, videoFile, zoomBlocks } = useVideoContext();
+  const {
+    videoURL,
+    videoFile,
+    zoomBlocks,
+    setDuration,
+    setCurrentTime,
+    videoRef,
+    dispatch,
+  } = useVideoContext();
 
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
-      setDuration(videoRef.current.duration);
+      dispatch(setDuration(videoRef.current.duration));
     }
   };
 
@@ -27,13 +29,13 @@ export default function VideoPlayer({
         (block) =>
           currentTime >= block.startTime && currentTime <= block.endTime
       );
-      setCurrentTime(videoRef.current.currentTime);
+      dispatch(setCurrentTime(videoRef.current.currentTime));
       setCurrentZoom(activeZoom || null);
     }
   };
 
   const getTransformStyle = () => {
-    if (!currentZoom||!isPreview) return {};
+    if (!currentZoom || !isPreview) return {};
 
     const { x, y, scaleFactor } = currentZoom;
 
@@ -49,10 +51,10 @@ export default function VideoPlayer({
         className="absolute inset-0 transition-transform duration-300"
         style={getTransformStyle()}
       >
-        {!isPreview && <ZoomBlocksOverlay currentTime={currentTime} />}
+        {!isPreview && <ZoomBlocksOverlay />}
         <video
           ref={videoRef}
-          controls={false}
+          controls
           width="600"
           className=""
           onLoadedMetadata={handleLoadedMetadata}

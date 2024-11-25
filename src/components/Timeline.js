@@ -1,19 +1,23 @@
 import { useVideoContext } from "@/hooks/useVideoContext";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ZoomBlockHandle from "./ZoomBlockHandle";
 import { twMerge } from "tailwind-merge";
 
-export default function Timeline({
-  currentTime,
-  duration,
-  videoRef,
-  setCurrentTime,
-  timelineRef,
-  setOpenBlockEditor,
-  isPreview,
-}) {
-  const { setZoomBlocks, zoomBlocks } = useVideoContext();
+export default function Timeline({ setOpenBlockEditor, isPreview }) {
+
+  const {
+    setZoomBlocks,
+    zoomBlocks,
+    currentTime,
+    duration,
+    videoRef,
+    dispatch,
+    setCurrentTime,
+  } = useVideoContext();
+
   const [isResizing, setIsResizing] = useState(false);
+  const timelineRef = useRef(null);
+
   const handlePlayheadDrag = (event) => {
     const timeline = timelineRef?.current.getBoundingClientRect();
     const dragX = Math.min(
@@ -25,7 +29,7 @@ export default function Timeline({
     if (videoRef?.current) {
       videoRef.current.currentTime = newTime;
     }
-    setCurrentTime(newTime);
+    dispatch(setCurrentTime(newTime));
   };
 
   const startDragging = () => {
@@ -41,46 +45,57 @@ export default function Timeline({
   const handleAddZoom = (event) => {
     if (isResizing) return;
 
+    const blockSize = duration / 10;
+  
     event.stopPropagation();
     const timeline = timelineRef.current.getBoundingClientRect();
     const clickX = event.clientX - timeline.left;
     const startTime = (clickX / timeline.width) * duration;
-
+  
     if (isPreview) {
       if (videoRef?.current) {
         videoRef.current.currentTime = startTime;
       }
-      return setCurrentTime(startTime);
+      return dispatch(setCurrentTime(startTime));
     }
-
+  
+    const newZoomBlock = {
+      id: Math.floor(Math.random() * 100000),
+      startTime: Math.round(startTime),
+      endTime: Math.round(Math.min(startTime + blockSize, duration)),
+      x: 0,
+      y: 0,
+      scaleFactor: 2,
+    };
+  
     const overlappingBlock = zoomBlocks.find(
       (block) =>
         (startTime >= block.startTime && startTime < block.endTime) ||
-        (startTime + 10 > block.startTime && startTime + 10 <= block.endTime)
+        (startTime + blockSize > block.startTime && startTime + blockSize <= block.endTime)
     );
-
+  
     if (overlappingBlock) {
       console.log("Already exists or overlaps with an existing block.");
-    } else {
-      const newZoomBlock = {
-        id: Math.floor(Math.random() * 100000),
-        startTime: Math.round(startTime),
-        endTime: Math.round(Math.min(startTime + 10, duration)),
-        x: 0,
-        y: 0,
-        scaleFactor: 2,
-      };
-      setZoomBlocks((prev) => [...prev, newZoomBlock]);
+      return;
     }
+  
+    const insertIndex = zoomBlocks.findIndex((block) => block.startTime > newZoomBlock.startTime);
+  
+    const updatedZoomBlocks =
+      insertIndex === -1
+        ? [...zoomBlocks, newZoomBlock] 
+        : [
+            ...zoomBlocks.slice(0, insertIndex),
+            newZoomBlock,
+            ...zoomBlocks.slice(insertIndex),
+          ];
+  
+    dispatch(setZoomBlocks(updatedZoomBlocks));
   };
+  
 
   return (
-    <div
-      className={twMerge(
-        "w-full mt-4 h-16 relative",
-       
-      )}
-    >
+    <div className={twMerge("w-full mt-4 h-16 relative")}>
       <div
         ref={timelineRef}
         className={twMerge(
@@ -127,12 +142,11 @@ export default function Timeline({
               <ZoomBlockHandle
                 key={block.id}
                 blockWidth={blockWidth}
-                setIsResizing={setIsResizing}
                 setOpenBlockEditor={setOpenBlockEditor}
                 blockLeft={blockLeft}
                 i={i}
                 block={block}
-                duration={duration}
+                setIsResizing={setIsResizing}
               />
             );
           })}

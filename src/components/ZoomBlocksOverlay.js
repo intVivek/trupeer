@@ -1,11 +1,11 @@
 import { useVideoContext } from "@/hooks/useVideoContext";
 
-export default function ZoomBlocksOverlay({ currentTime }) {
-  const { zoomBlocks } = useVideoContext();
+export default function ZoomBlocksOverlay() {
+  const { zoomBlocks, currentTime } = useVideoContext();
 
   return (
     <>
-      {zoomBlocks.map((block) => {
+      {zoomBlocks && zoomBlocks?.map((block) => {
         const isActive =
           currentTime >= block.startTime && currentTime <= block.endTime;
         return (

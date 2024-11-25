@@ -4,14 +4,12 @@ import { MdOutlineDragHandle } from "react-icons/md";
 export default function ZoomBlockHandle({
   blockLeft,
   blockWidth,
-  setIsResizing,
   setOpenBlockEditor,
   block,
-  duration,
-  i
+  setIsResizing,
+  i,
 }) {
-
-    const { zoomBlocks, setZoomBlocks } = useVideoContext();
+  const { zoomBlocks, setZoomBlocks, duration, dispatch } = useVideoContext();
 
   const handleResizeLeft = (event, block, i) => {
     event.preventDefault();
@@ -26,7 +24,7 @@ export default function ZoomBlockHandle({
 
       const deltaX = initialMouseX - e.clientX;
 
-      let newStartTime = initialStartTime - deltaX / 4.5;
+      let newStartTime = initialStartTime - (deltaX * duration) / 600;
 
       newStartTime = Math.max(0, newStartTime);
 
@@ -38,9 +36,11 @@ export default function ZoomBlockHandle({
         newStartTime = overlappingBlock.endTime;
       }
 
-      setZoomBlocks((prev) =>
-        prev.map((b, index) =>
-          index === i ? { ...b, startTime: newStartTime } : b
+      dispatch(
+        setZoomBlocks(
+          zoomBlocks.map((b, index) =>
+            index === i ? { ...b, startTime: newStartTime } : b
+          )
         )
       );
     };
@@ -68,7 +68,7 @@ export default function ZoomBlockHandle({
 
       const deltaX = e.clientX - initialMouseX;
 
-      let newEndTime = initialEndTime + deltaX / 4.5;
+      let newEndTime = initialEndTime + (deltaX * duration) / 600;
 
       newEndTime = Math.min(duration, newEndTime);
 
@@ -81,9 +81,11 @@ export default function ZoomBlockHandle({
         newEndTime = overlappingBlock.startTime;
       }
 
-      setZoomBlocks((prev) =>
-        prev.map((b, index) =>
-          index === i ? { ...b, endTime: newEndTime } : b
+      dispatch(
+        setZoomBlocks(
+          zoomBlocks.map((b, index) =>
+            index === i ? { ...b, endTime: newEndTime } : b
+          )
         )
       );
     };
@@ -119,7 +121,7 @@ export default function ZoomBlockHandle({
         className="flex-1 h-full "
         onClick={(e) => {
           e.stopPropagation();
-          setOpenBlockEditor(i);
+          setOpenBlockEditor(block.id);
         }}
       ></div>
       <div

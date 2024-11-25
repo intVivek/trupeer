@@ -5,8 +5,12 @@ import { RxCross1 } from "react-icons/rx";
 import Button from "./Button";
 import Input from "./Input";
 
-export default function BlockEditor({ index, onClose, duration }) {
-  const { setZoomBlocks, zoomBlocks } = useVideoContext();
+export default function BlockEditor({ id, onClose }) {
+  const { setZoomBlocks, zoomBlocks, duration, dispatch } = useVideoContext();
+
+  const index = zoomBlocks.findIndex(obj => obj.id === id );
+
+
 
   const editingBlock = zoomBlocks[index];
 
@@ -17,7 +21,6 @@ export default function BlockEditor({ index, onClose, duration }) {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm();
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function BlockEditor({ index, onClose, duration }) {
   }, [editingBlock, setValue]);
 
   const handleDelete = () => {
-    setZoomBlocks((p) => p.filter((_, i) => i !== index));
+    dispatch(setZoomBlocks(zoomBlocks.filter((_, i) => i !== index)));
     onClose();
   };
 
@@ -63,9 +66,9 @@ export default function BlockEditor({ index, onClose, duration }) {
       scaleFactor,
     };
 
-    setZoomBlocks((prev) =>
-      prev.map((block) => (block.id === editingBlock.id ? updatedBlock : block))
-    );
+    dispatch(setZoomBlocks(
+      zoomBlocks.map((block) => (block.id === editingBlock.id ? updatedBlock : block))
+    ));
     onClose();
   };
 

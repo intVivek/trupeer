@@ -1,7 +1,17 @@
-import { useState } from "react";
+import { useVideoContext } from "@/hooks/useVideoContext";
 import { FaBackward, FaForward, FaPause, FaPlay } from "react-icons/fa";
 
-export default function Navigation({ videoRef, setCurrentTime, openPreview, setOpenPreview, isPlaying, setIsPlaying }) {
+export default function Navigation({
+  openPreview,
+  setOpenPreview,
+}) {
+  const {
+    videoRef,
+    setCurrentTime,
+    isPlaying,
+    setIsPlaying,
+    dispatch,
+  } = useVideoContext();
 
   const togglePlayPause = () => {
     if (videoRef.current) {
@@ -10,23 +20,26 @@ export default function Navigation({ videoRef, setCurrentTime, openPreview, setO
       } else {
         videoRef.current.play();
       }
-      setIsPlaying(!isPlaying);
+      dispatch(setIsPlaying(!isPlaying));
     }
   };
 
   const handleForward = () => {
     if (videoRef.current) {
-      const newTime = Math.min(videoRef.current.duration, videoRef.current.currentTime + 10);
+      const newTime = Math.min(
+        videoRef.current.duration,
+        videoRef.current.currentTime + 10
+      );
       videoRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      dispatch(setCurrentTime(newTime));
     }
   };
 
   const handleBackward = () => {
     if (videoRef.current) {
-      const newTime = Math.max(0, videoRef.current.currentTime - 10); 
+      const newTime = Math.max(0, videoRef.current.currentTime - 10);
       videoRef.current.currentTime = newTime;
-      setCurrentTime(newTime);
+      dispatch(setCurrentTime(newTime));
     }
   };
 
@@ -36,25 +49,25 @@ export default function Navigation({ videoRef, setCurrentTime, openPreview, setO
         className="rounded-full cursor-pointer w-8 h-8 flex justify-center items-center bg-gray-950 text-white"
         onClick={handleBackward}
       >
-        <FaBackward size={12}/>
+        <FaBackward size={12} />
       </div>
       <div
         className="rounded-full cursor-pointer w-8 h-8 flex justify-center items-center bg-gray-950 text-white"
         onClick={togglePlayPause}
       >
-        {isPlaying ? <FaPause size={12}/> : <FaPlay size={12}/>}
+        {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
       </div>
       <div
         className="rounded-full cursor-pointer w-8 h-8 flex justify-center items-center bg-gray-950 text-white"
         onClick={handleForward}
       >
-        <FaForward size={12}/>
+        <FaForward size={12} />
       </div>
       <div
         className="absolute right-0 rounded-md select-none cursor-pointer text-sm font-medium p-2 flex justify-center items-center bg-gray-950 text-white"
-        onClick={()=>setOpenPreview(p=>!p)}
+        onClick={() => setOpenPreview((p) => !p)}
       >
-        {openPreview?"Edit":'Preview'}
+        {openPreview ? "Edit" : "Preview"}
       </div>
     </div>
   );
