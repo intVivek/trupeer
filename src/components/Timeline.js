@@ -8,6 +8,7 @@ export default function Timeline({
   timelineRef,
   zoomBlocks,
   setZoomBlocks,
+  setOpenBlockEditor,
 }) {
   const handlePlayheadDrag = (event) => {
     const timeline = timelineRef.current.getBoundingClientRect();
@@ -49,11 +50,11 @@ export default function Timeline({
     } else {
       const newZoomBlock = {
         id: Math.floor(Math.random() * 100000),
-        startTime,
-        endTime: Math.min(startTime + 10, duration),
+        startTime: Math.round(startTime),
+        endTime: Math.round(Math.min(startTime + 10, duration)),
         x: 0,
         y: 0,
-        factor: 2,
+        scaleFactor: 2,
       };
       setZoomBlocks((prev) => [...prev, newZoomBlock]);
     }
@@ -90,7 +91,7 @@ export default function Timeline({
         ></div>
       </div>
       {zoomBlocks &&
-        zoomBlocks.map((block) => {
+        zoomBlocks.map((block, i) => {
           const blockWidth =
             ((block.endTime - block.startTime) / duration) * 100;
           const blockLeft = (block.startTime / duration) * 100;
@@ -102,6 +103,7 @@ export default function Timeline({
                 left: `${blockLeft}%`,
                 width: `${blockWidth}%`,
               }}
+              onClick={()=>setOpenBlockEditor(i)}
             />
           );
         })}
