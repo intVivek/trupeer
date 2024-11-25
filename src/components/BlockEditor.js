@@ -75,9 +75,9 @@ export default function BlockEditor({
   };
 
   return (
-    <div>
-      <div className="bg-backdrop w-screen h-screen fixed top-0 z-20 left-0"></div>
-      <div className="relative bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray-800 z-30">
+    <div className="fixed w-screen h-screen">
+      <div className="bg-backdrop w-screen h-screen"></div>
+      <div className="absolute bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray-800 z-30 animate-slide-in">
         <div className="flex justify-between items-center my-8 text-slate-100 text-xl font-medium">
           Edit Zoom Block
           <RxCross1 className="ml-auto cursor-pointer" onClick={onClose} />
@@ -218,6 +218,10 @@ export default function BlockEditor({
               step={'any'}
               {...register("scaleFactor", {
                 required: "Scale Factor is required",
+                min: {
+                  value: 1,
+                  message: "Minimum value should be 1",
+                },
               })}
               type="number"
               className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-white placeholder-gray-400 focus:outline-none"
