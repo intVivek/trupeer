@@ -18,6 +18,7 @@ export default function ZoomBlockHandle({
 
     const initialMouseX = event.clientX;
     const initialStartTime = block.startTime;
+    const initialEndTime = block.endTime;
 
     const onMouseMove = (e) => {
       e.stopPropagation();
@@ -26,15 +27,10 @@ export default function ZoomBlockHandle({
 
       let newStartTime = initialStartTime - (deltaX * duration) / 600;
 
-      newStartTime = Math.max(0, newStartTime);
-
-      const overlappingBlock = zoomBlocks.find(
-        (b, index) =>
-          index !== i && newStartTime < b.endTime && newStartTime >= b.startTime
+      newStartTime = Math.min(
+        Math.max(zoomBlocks[i - 1]?.endTime || 0, newStartTime),
+        initialEndTime + 5
       );
-      if (overlappingBlock) {
-        newStartTime = overlappingBlock.endTime;
-      }
 
       dispatch(
         setZoomBlocks(
@@ -46,7 +42,7 @@ export default function ZoomBlockHandle({
     };
 
     const onMouseUp = () => {
-      setIsResizing(false);
+      setTimeout(() => setIsResizing(false), 10);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
@@ -61,6 +57,7 @@ export default function ZoomBlockHandle({
     setIsResizing(true);
 
     const initialMouseX = event.clientX;
+    const initialStartTime = block.startTime;
     const initialEndTime = block.endTime;
 
     const onMouseMove = (e) => {
@@ -70,16 +67,10 @@ export default function ZoomBlockHandle({
 
       let newEndTime = initialEndTime + (deltaX * duration) / 600;
 
-      newEndTime = Math.min(duration, newEndTime);
-
-      const overlappingBlock = zoomBlocks.find(
-        (b, index) =>
-          index !== i && newEndTime > b.startTime && newEndTime <= b.endTime
+      newEndTime = Math.max(
+        Math.min(zoomBlocks[i + 1]?.startTime || duration, newEndTime),
+        initialStartTime + 5
       );
-
-      if (overlappingBlock) {
-        newEndTime = overlappingBlock.startTime;
-      }
 
       dispatch(
         setZoomBlocks(
@@ -91,7 +82,7 @@ export default function ZoomBlockHandle({
     };
 
     const onMouseUp = () => {
-      setIsResizing(false);
+      setTimeout(() => setIsResizing(false), 10);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("mouseup", onMouseUp);
     };
