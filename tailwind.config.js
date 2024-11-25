@@ -10,6 +10,7 @@ module.exports = {
       colors: {
         gray900: '#151515',
         transparentYellow: '#e6b31542',
+        backdrop: '#82828240',
       },
     },
   },
