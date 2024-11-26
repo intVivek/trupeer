@@ -12,6 +12,8 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
     setDuration,
     setCurrentTime,
     videoRef,
+    width,
+    height,
     dispatch,
   } = useVideoContext();
 
@@ -53,17 +55,21 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
   };
 
   return (
-    <div className="relative border border-gray200 rounded-md overflow-hidden w-[600px] h-[320px]">
+    <div
+      className={`relative border border-gray200 rounded-md overflow-hidden w-full`}
+      style={{height}}
+    >
       <div
         className="absolute inset-0 transition-transform duration-300"
         style={getTransformStyle()}
       >
-        {!isPreview && <ZoomBlocksOverlay setOpenBlockEditor={setOpenBlockEditor}/>}
+        {!isPreview && (
+          <ZoomBlocksOverlay setOpenBlockEditor={setOpenBlockEditor} />
+        )}
         <video
           ref={videoRef}
           controls={false}
-          width="600"
-          className=""
+          className="w-full"
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
         >

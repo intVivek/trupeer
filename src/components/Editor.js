@@ -10,7 +10,15 @@ export default function Editor() {
   const [openBlockEditor, setOpenBlockEditor] = useState(null);
   const [openPreview, setOpenPreview] = useState(false);
 
-  const { videoRef, videoFile, dispatch, setVideoFile, setIsPlaying, setVideoURL } = useVideoContext();
+  const {
+    videoRef,
+    videoFile,
+    dispatch,
+    setVideoFile,
+    setIsPlaying,
+    width,
+    setVideoURL,
+  } = useVideoContext();
 
   const handleFileChange = (file) => {
     if (!file) return;
@@ -18,24 +26,25 @@ export default function Editor() {
     dispatch(setVideoURL(URL.createObjectURL(file)));
   };
 
-  useEffect(()=>{
-    if(openBlockEditor){
+  useEffect(() => {
+    if (openBlockEditor) {
       dispatch(setIsPlaying(false));
       videoRef.current.pause();
     }
-  }, [openBlockEditor])
+  }, [openBlockEditor]);
 
   const handleCloseSidebar = () => {
-    setOpenBlockEditor(null)
+    setOpenBlockEditor(null);
     dispatch(setIsPlaying(true));
     videoRef.current.play();
-  }
+  };
 
   return (
-    <div className="relative w-full flex items-center justify-between h-full">
-      <div className="w-full flex items-center justify-center">
-        {videoFile ? (
-          <div className="w-[600px] m-auto">
+    <div className="relative w-full flex items-center justify-between overflow-hidden h-full">
+      <div className="w-full flex items-center flex-col justify-center">
+      <FileUpload onChange={handleFileChange} />
+        {videoFile && (
+          <div className="w-[800px] max-w-[90%] min-w-[300px] m-4">
             <VideoPlayer
               isPreview={openPreview}
               setOpenBlockEditor={setOpenBlockEditor}
@@ -49,15 +58,10 @@ export default function Editor() {
               isPreview={openPreview}
             />
           </div>
-        ) : (
-          <FileUpload onChange={handleFileChange} />
-        )}
+        ) }
       </div>
       {openBlockEditor && (
-        <BlockEditor
-          id={openBlockEditor}
-          onClose={handleCloseSidebar}
-        />
+        <BlockEditor id={openBlockEditor} onClose={handleCloseSidebar} />
       )}
     </div>
   );

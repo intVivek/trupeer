@@ -10,7 +10,8 @@ export default function ZoomBlockHandle({
   timelineRef,
   i,
 }) {
-  const { zoomBlocks, setZoomBlocks, duration, dispatch } = useVideoContext();
+  const { zoomBlocks, setZoomBlocks, duration, width, dispatch } =
+    useVideoContext();
 
   const handleResizeLeft = (event, block, i) => {
     event.preventDefault();
@@ -26,7 +27,7 @@ export default function ZoomBlockHandle({
 
       const deltaX = initialMouseX - e.clientX;
 
-      let newStartTime = initialStartTime - (deltaX * duration) / 600;
+      let newStartTime = initialStartTime - (deltaX * duration) / width;
 
       newStartTime = Math.min(
         Math.max(zoomBlocks[i - 1]?.endTime || 0, newStartTime),
@@ -65,7 +66,7 @@ export default function ZoomBlockHandle({
       e.preventDefault();
       const deltaX = e.clientX - initialMouseX;
 
-      let newEndTime = initialEndTime + (deltaX * duration) / 600;
+      let newEndTime = initialEndTime + (deltaX * duration) / width;
 
       newEndTime = Math.max(
         Math.min(zoomBlocks[i + 1]?.startTime || duration, newEndTime),
@@ -103,7 +104,7 @@ export default function ZoomBlockHandle({
     const initialStartTime = block.startTime;
     const blockDuration = block.endTime - block.startTime;
 
-    var isDragging=false;
+    var isDragging = false;
 
     const onMouseMove = (e) => {
       const deltaX = e.clientX - initialMouseX;

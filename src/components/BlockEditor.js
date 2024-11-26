@@ -6,11 +6,10 @@ import Button from "./Button";
 import Input from "./Input";
 
 export default function BlockEditor({ id, onClose }) {
-  const { setZoomBlocks, zoomBlocks, duration, dispatch } = useVideoContext();
+  const { setZoomBlocks, zoomBlocks, duration, width, height, dispatch } =
+    useVideoContext();
 
-  const index = zoomBlocks.findIndex(obj => obj.id === id );
-
-
+  const index = zoomBlocks.findIndex((obj) => obj.id === id);
 
   const editingBlock = zoomBlocks[index];
 
@@ -41,18 +40,18 @@ export default function BlockEditor({ id, onClose }) {
   const onSubmit = (data) => {
     const { startTime, endTime, x, y, scaleFactor } = data;
 
-    if (scaleFactor < 600 / (600 - x)) {
+    if (scaleFactor < width / (width - x)) {
       return setError(
         `Zoom box getting out of video, Either reduce X coordinate or make scale factor greate than ${
-          600 / (600 - x)
+          width / (width - x)
         }`
       );
     }
 
-    if (scaleFactor < 320 / (320 - y)) {
+    if (scaleFactor < height / (height - y)) {
       return setError(
         `Zoom box getting out of video, Either reduce Y coordinate or make scale factor greate than ${
-          600 / (600 - y)
+          width / (width - y)
         }`
       );
     }
@@ -66,9 +65,13 @@ export default function BlockEditor({ id, onClose }) {
       scaleFactor,
     };
 
-    dispatch(setZoomBlocks(
-      zoomBlocks.map((block) => (block.id === editingBlock.id ? updatedBlock : block))
-    ));
+    dispatch(
+      setZoomBlocks(
+        zoomBlocks.map((block) =>
+          block.id === editingBlock.id ? updatedBlock : block
+        )
+      )
+    );
     onClose();
   };
 
@@ -130,8 +133,8 @@ export default function BlockEditor({ id, onClose }) {
                 message: "Minimum value should be zero",
               },
               max: {
-                value: 600,
-                message: `Maximum value should be 600`,
+                value: width,
+                message: `Maximum value should be ${width}`,
               },
             })}
             error={errors?.x?.message}
@@ -147,8 +150,8 @@ export default function BlockEditor({ id, onClose }) {
                 message: "Minimum value should be zero",
               },
               max: {
-                value: 320,
-                message: `Maximum value should be 320`,
+                value: height,
+                message: `Maximum value should be ${height}`,
               },
             })}
             error={errors?.y?.message}
