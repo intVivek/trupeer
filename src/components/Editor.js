@@ -21,8 +21,8 @@ export default function Editor() {
   } = useVideoContext();
 
   const handleFileChange = (file) => {
-    console.log(file);
-    dispatch(resetState()), dispatch(setVideoFile(file));
+    dispatch(resetState());
+    dispatch(setVideoFile(file));
     dispatch(setVideoURL(URL.createObjectURL(file)));
   };
 

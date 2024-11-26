@@ -13,7 +13,7 @@ export default function FileUpload({ label = 'Select a video', file, onChange })
 
       <label
         htmlFor="file-upload"
-        className="bg-accentColor hover:bg-accentColorDark text-white px-4 py-2 rounded-md cursor-pointer flex items-center space-x-2"
+        className="bg-accentColor200 hover:bg-accentColor transition-all text-white px-4 py-2 rounded-md cursor-pointer flex items-center space-x-2"
       >
         <RiFileUploadLine className="text-2xl" />
         <span>{file?"Upload another Video":"Upload a Video"}</span>

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { RxCross1 } from "react-icons/rx";
 import Button from "./Button";
 import Input from "./Input";
+import { MdOutlineDelete } from "react-icons/md";
 
 export default function BlockEditor({ id, onClose }) {
   const { setZoomBlocks, zoomBlocks, duration, width, height, dispatch } =
@@ -20,6 +21,7 @@ export default function BlockEditor({ id, onClose }) {
     handleSubmit,
     formState: { errors },
     setValue,
+    watch,
   } = useForm();
 
   useEffect(() => {
@@ -37,12 +39,10 @@ export default function BlockEditor({ id, onClose }) {
     onClose();
   };
 
-  const onSubmit = (data) => {
-    const { startTime, endTime, x, y, scaleFactor } = data;
-
+  const apply = ({ startTime, endTime, x, y, scaleFactor }, isSubmit) => {
     if (scaleFactor < width / (width - x)) {
       return setError(
-        `Zoom box getting out of video, Either reduce X coordinate or make scale factor greate than ${
+        `Zoom box getting out of video, Either reduce X coordinate or make scale factor greater than ${
           width / (width - x)
         }`
       );
@@ -50,7 +50,7 @@ export default function BlockEditor({ id, onClose }) {
 
     if (scaleFactor < height / (height - y)) {
       return setError(
-        `Zoom box getting out of video, Either reduce Y coordinate or make scale factor greate than ${
+        `Zoom box getting out of video, Either reduce Y coordinate or make scale factor greater than ${
           width / (width - y)
         }`
       );
@@ -72,7 +72,12 @@ export default function BlockEditor({ id, onClose }) {
         )
       )
     );
-    onClose();
+
+    isSubmit && onClose();
+  };
+
+  const onSubmit = (data) => {
+    apply(data, true);
   };
 
   return (
@@ -173,8 +178,28 @@ export default function BlockEditor({ id, onClose }) {
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
-          <div className="flex justify-end gap-4 mt-auto mb-4">
-            <Button secondary onClick={handleDelete} label="Delete" />
+          <div className="flex items-center justify-end gap-4 mt-auto mb-4">
+            <MdOutlineDelete
+              size={38}
+              className="mr-auto cursor-pointer transition-all text-accentColor200 hover:text-white hover:bg-accentColor200 rounded-full p-2"
+              onClick={handleDelete}
+              label="Delete"
+            />
+            <Button
+              secondary
+              onClick={(e) => {
+                e.stopPropagation();
+                apply({
+                  startTime: watch("startTime"),
+                  endTime: watch("endTime"),
+                  x: watch("x"),
+                  y: watch("y"),
+                  scaleFactor: watch("scaleFactor"),
+                });
+              }}
+              label="Apply"
+              type="button"
+            />
             <Button type="submit" label="Save" />
           </div>
         </form>

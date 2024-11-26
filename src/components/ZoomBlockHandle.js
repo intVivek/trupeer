@@ -31,7 +31,7 @@ export default function ZoomBlockHandle({
 
       newStartTime = Math.min(
         Math.max(zoomBlocks[i - 1]?.endTime || 0, newStartTime),
-        initialEndTime + 5
+        initialEndTime - 5
       );
 
       dispatch(

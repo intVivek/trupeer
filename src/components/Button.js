@@ -12,7 +12,7 @@ const Button = ({
     <button
       onClick={onClick}
       className={twMerge(
-        "px-4 py-2 bg-accentColor200 text-white font-semibold rounded-lg hover:bg-accentColor outline-none",
+        "px-4 py-2 bg-accentColor200 transition-all text-white font-semibold rounded-lg hover:bg-accentColor outline-none",
         secondary && 'bg-transparent text-accentColor200 hover:text-accentColor hover:bg-transparent',
         className && className
       )}
