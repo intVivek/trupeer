@@ -1,19 +1,29 @@
-export default function FileUpload({ label='Select a video', onChange }) {
+import { RiFileUploadLine } from "react-icons/ri";
+
+export default function FileUpload({ label = 'Select a video', file, onChange }) {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    onChange(file, event)
+    onChange(file, event);
   };
 
   return (
-    <div>
-      <h1 className="text-white mb-4">{label}</h1>
+    <div className="flex mb-4 flex-col items-center text-white">
+      {!file && <h1 className="mb-4 text-lg">{label}</h1>}
+
+      <label
+        htmlFor="file-upload"
+        className="bg-accentColor hover:bg-accentColorDark text-white px-4 py-2 rounded-md cursor-pointer flex items-center space-x-2"
+      >
+        <RiFileUploadLine className="text-2xl" />
+        <span>{file?"Upload another Video":"Upload a Video"}</span>
+      </label>
       <input
-      className="text-white"
+        id="file-upload"
         type="file"
         accept="video/*"
         onChange={handleFileChange}
-        style={{ marginBottom: "20px" }}
+        className="hidden"
       />
     </div>
   );

@@ -16,13 +16,13 @@ export default function Editor() {
     dispatch,
     setVideoFile,
     setIsPlaying,
-    width,
     setVideoURL,
+    resetState,
   } = useVideoContext();
 
   const handleFileChange = (file) => {
-    if (!file) return;
-    dispatch(setVideoFile(file));
+    console.log(file);
+    dispatch(resetState()), dispatch(setVideoFile(file));
     dispatch(setVideoURL(URL.createObjectURL(file)));
   };
 
@@ -42,23 +42,25 @@ export default function Editor() {
   return (
     <div className="relative w-full flex items-center justify-between overflow-hidden h-full">
       <div className="w-full flex items-center flex-col justify-center">
-      <FileUpload onChange={handleFileChange} />
-        {videoFile && (
-          <div className="w-[800px] max-w-[90%] min-w-[300px] m-4">
-            <VideoPlayer
-              isPreview={openPreview}
-              setOpenBlockEditor={setOpenBlockEditor}
-            />
-            <Navigation
-              openPreview={openPreview}
-              setOpenPreview={setOpenPreview}
-            />
-            <Timeline
-              setOpenBlockEditor={setOpenBlockEditor}
-              isPreview={openPreview}
-            />
-          </div>
-        ) }
+        <div className="w-[800px] max-w-[90%] min-w-[300px] m-4">
+          <FileUpload onChange={handleFileChange} file={videoFile} />
+          {videoFile && (
+            <>
+              <VideoPlayer
+                isPreview={openPreview}
+                setOpenBlockEditor={setOpenBlockEditor}
+              />
+              <Navigation
+                openPreview={openPreview}
+                setOpenPreview={setOpenPreview}
+              />
+              <Timeline
+                setOpenBlockEditor={setOpenBlockEditor}
+                isPreview={openPreview}
+              />
+            </>
+          )}
+        </div>
       </div>
       {openBlockEditor && (
         <BlockEditor id={openBlockEditor} onClose={handleCloseSidebar} />

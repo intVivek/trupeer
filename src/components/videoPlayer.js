@@ -12,7 +12,6 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
     setDuration,
     setCurrentTime,
     videoRef,
-    width,
     height,
     dispatch,
   } = useVideoContext();
@@ -72,6 +71,7 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
           className="w-full"
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
+          key={videoURL}
         >
           <source src={videoURL} type={videoFile?.type} />
           Your browser does not support the video tag.

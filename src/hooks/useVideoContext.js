@@ -19,6 +19,7 @@ export const VideoActionTypes = {
   SET_CURRENT_TIME: "SET_CURRENT_TIME",
   SET_IS_PLAYING: "SET_IS_PLAYING",
   SET_VIDEO_DIMENSIONS: "SET_VIDEO_DIMENSIONS",
+  RESET_STATE: "RESET_STATE",  // New action type
 };
 
 export const VideoActions = {
@@ -50,6 +51,9 @@ export const VideoActions = {
     type: VideoActionTypes.SET_VIDEO_DIMENSIONS,
     payload: { width, height },
   }),
+  resetState: () => ({
+    type: VideoActionTypes.RESET_STATE,
+  }),
 };
 
 const videoReducer = (state, action) => {
@@ -68,6 +72,8 @@ const videoReducer = (state, action) => {
       return { ...state, isPlaying: action.payload };
     case VideoActionTypes.SET_VIDEO_DIMENSIONS:
       return { ...state, ...action.payload };
+    case VideoActionTypes.RESET_STATE:
+      return initialState;  // Reset the state to initialState
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
