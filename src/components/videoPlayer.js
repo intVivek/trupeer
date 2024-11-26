@@ -12,11 +12,15 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
     setDuration,
     setCurrentTime,
     videoRef,
+    width,
     height,
+    setVideoDimensions,
     dispatch,
   } = useVideoContext();
 
-  const handleLoadedMetadata = () => {
+  const handleLoadedMetadata = (e) => {
+    const { videoWidth, videoHeight } = e.target;
+    dispatch(setVideoDimensions(videoWidth, videoHeight));
     if (videoRef.current) {
       dispatch(setDuration(videoRef.current.duration));
     }
@@ -55,12 +59,11 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
 
   return (
     <div
-      className={`relative border border-gray200 rounded-md overflow-hidden w-full`}
-      style={{height}}
+      className={`relative border border-gray200 rounded-md grid place-items-center overflow-hidden w-full`}
+      style={{ height }}
     >
       <div
-        className="absolute inset-0 transition-transform duration-300"
-        style={getTransformStyle()}
+        className="overflow-hidden inset-0 w-max h-max "
       >
         {!isPreview && (
           <ZoomBlocksOverlay setOpenBlockEditor={setOpenBlockEditor} />
@@ -68,7 +71,14 @@ export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
         <video
           ref={videoRef}
           controls={false}
-          className="w-full"
+          width={'auto'}
+          height={'auto'}
+          style={{
+            maxWidth: '800px',
+            maxHeight: '400px',
+            ...getTransformStyle()
+          }}
+          className="transition-transform duration-300"
           onLoadedMetadata={handleLoadedMetadata}
           onTimeUpdate={handleTimeUpdate}
           key={videoURL}

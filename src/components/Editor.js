@@ -42,7 +42,7 @@ export default function Editor() {
   return (
     <div className="relative w-full flex items-center justify-between overflow-hidden h-full">
       <div className="w-full flex items-center flex-col justify-center">
-        <div className="w-[800px] max-w-[90%] min-w-[300px] m-4">
+        <div className="w-max max-w-[90%] h-max min-w-[800px] m-4">
           <FileUpload onChange={handleFileChange} file={videoFile} />
           {videoFile && (
             <>
