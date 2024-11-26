@@ -7,6 +7,7 @@ import Input from "./Input";
 import { MdOutlineDelete } from "react-icons/md";
 
 export default function BlockEditor({ id, onClose }) {
+
   const { setZoomBlocks, zoomBlocks, duration, width, height, dispatch } =
     useVideoContext();
 
@@ -34,6 +35,8 @@ export default function BlockEditor({ id, onClose }) {
     }
   }, [editingBlock, setValue]);
 
+  console.log(editingBlock)
+
   const handleDelete = () => {
     dispatch(setZoomBlocks(zoomBlocks.filter((_, i) => i !== index)));
     onClose();
@@ -58,11 +61,11 @@ export default function BlockEditor({ id, onClose }) {
 
     const updatedBlock = {
       id: editingBlock.id,
-      startTime,
-      endTime,
-      x: x,
-      y: y,
-      scaleFactor,
+      startTime: parseInt(startTime),
+      endTime: parseInt(endTime),
+      x: parseInt(x),
+      y: parseInt(y),
+      scaleFactor:parseInt(scaleFactor),
     };
 
     dispatch(
