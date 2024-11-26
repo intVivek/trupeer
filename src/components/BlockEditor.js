@@ -7,7 +7,6 @@ import Input from "./Input";
 import { MdOutlineDelete } from "react-icons/md";
 
 export default function BlockEditor({ id, onClose }) {
-
   const { setZoomBlocks, zoomBlocks, duration, width, height, dispatch } =
     useVideoContext();
 
@@ -35,7 +34,7 @@ export default function BlockEditor({ id, onClose }) {
     }
   }, [editingBlock, setValue]);
 
-  console.log(editingBlock)
+  console.log(editingBlock);
 
   const handleDelete = () => {
     dispatch(setZoomBlocks(zoomBlocks.filter((_, i) => i !== index)));
@@ -65,7 +64,7 @@ export default function BlockEditor({ id, onClose }) {
       endTime: parseInt(endTime),
       x: parseInt(x),
       y: parseInt(y),
-      scaleFactor:parseInt(scaleFactor),
+      scaleFactor: parseInt(scaleFactor),
     };
 
     dispatch(
@@ -85,7 +84,13 @@ export default function BlockEditor({ id, onClose }) {
 
   return (
     <div className="fixed w-screen h-screen z-50">
-      <div className="bg-backdrop w-screen h-screen"></div>
+      <div
+        className="bg-backdrop w-screen h-screen"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      ></div>
       <div className="absolute bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray200 z-30 animate-slide-in">
         <div className="flex justify-between items-center my-8 text-slate-100 text-xl font-medium">
           Edit Zoom Block

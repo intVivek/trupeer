@@ -26,8 +26,7 @@ export default function ZoomBlockHandle({
       e.stopPropagation();
 
       const deltaX = initialMouseX - e.clientX;
-
-      let newStartTime = initialStartTime - (deltaX * duration) / width;
+      let newStartTime = initialStartTime - (deltaX * duration) / timelineRef.current.offsetWidth;
 
       newStartTime = Math.min(
         Math.max(zoomBlocks[i - 1]?.endTime || 0, newStartTime),
@@ -66,7 +65,7 @@ export default function ZoomBlockHandle({
       e.preventDefault();
       const deltaX = e.clientX - initialMouseX;
 
-      let newEndTime = initialEndTime + (deltaX * duration) / width;
+      let newEndTime = initialEndTime + (deltaX * duration) / timelineRef.current.offsetWidth;
 
       newEndTime = Math.max(
         Math.min(zoomBlocks[i + 1]?.startTime || duration, newEndTime),
