@@ -38,6 +38,7 @@ export default function Editor() {
           <div className="w-[600px] m-auto">
             <VideoPlayer
               isPreview={openPreview}
+              setOpenBlockEditor={setOpenBlockEditor}
             />
             <Navigation
               openPreview={openPreview}

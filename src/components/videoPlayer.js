@@ -1,8 +1,8 @@
 import { useVideoContext } from "@/hooks/useVideoContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ZoomBlocksOverlay from "./ZoomBlocksOverlay";
 
-export default function VideoPlayer({ isPreview }) {
+export default function VideoPlayer({ isPreview, setOpenBlockEditor }) {
   const [currentZoom, setCurrentZoom] = useState(null);
 
   const {
@@ -20,6 +20,13 @@ export default function VideoPlayer({ isPreview }) {
       dispatch(setDuration(videoRef.current.duration));
     }
   };
+
+  useEffect(() => {
+    let timeout = setTimeout(() => {
+      handleTimeUpdate();
+    }, 50);
+    return () => clearTimeout(timeout);
+  }, [zoomBlocks]);
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
@@ -51,7 +58,7 @@ export default function VideoPlayer({ isPreview }) {
         className="absolute inset-0 transition-transform duration-300"
         style={getTransformStyle()}
       >
-        {!isPreview && <ZoomBlocksOverlay />}
+        {!isPreview && <ZoomBlocksOverlay setOpenBlockEditor={setOpenBlockEditor}/>}
         <video
           ref={videoRef}
           controls={false}

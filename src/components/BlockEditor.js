@@ -73,7 +73,7 @@ export default function BlockEditor({ id, onClose }) {
   };
 
   return (
-    <div className="fixed w-screen h-screen">
+    <div className="fixed w-screen h-screen z-50">
       <div className="bg-backdrop w-screen h-screen"></div>
       <div className="absolute bg-gray900 flex flex-col px-4 right-0 h-screen top-0 w-[400px] border-l border-gray200 z-30 animate-slide-in">
         <div className="flex justify-between items-center my-8 text-slate-100 text-xl font-medium">
